@@ -1,0 +1,26 @@
+- alias: Sync light
+  trigger:
+    - platform: state
+      entity_id: light.smart_switch1_smart_switch
+  action:
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: light.smart_switch1_smart_switch
+              state: "off"
+          sequence:
+            - service: light.turn_off
+              target:
+                entity_id: light.target_light
+        - conditions:
+            - condition: state
+              entity_id: light.smart_switch1_smart_switch
+              state: "on"
+          sequence:
+            - service: light.turn_on
+              target:
+                entity_id: light.target_light
+              data:
+                # rgb_color: "{{ trigger.to_state.attributes.rgb_color }}"    # Won't work with a light that doesn't have color. Uncomment if you want color too.
+                brightness: "{{ trigger.to_state.attributes.brightness }}"
+  mode: single
